@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar with Milestones</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #000428, #004e92);
+}
+
+.progress-container {
+    position: relative;
+    width: 80%;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background-color: #6a1b9a;
+    border-radius: 15px;
+    transition: width 0.3s;
+}
+
+.milestones {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
+.milestone {
+    position: relative;
+    width: 1px;
+    height: 100%;
+    background-color: transparent;
+}
+
+.milestone::after {
+    content: attr(id);
+    position: absolute;
+    top: -25px;
+    left: -15px;
+    font-size: 12px;
+    color: white;
+}
+
+.quote {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #6a1b9a;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #9c27b0;
+}
+
+.confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+}
+
+.confetti::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: url('https://i.imgur.com/NRbZ2fY.gif') no-repeat center center;
+    background-size: cover;
+    transform: translate(-50%, -50%);
+}
+
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+        <div class="milestones">
+            <div class="milestone" id="milestone-1">25%</div>
+            <div class="milestone" id="milestone-2">50%</div>
+            <div class="milestone" id="milestone-3">75%</div>
+            <div class="milestone" id="milestone-4">100%</div>
+        </div>
+    </div>
+    <div id="quote" class="quote">Let's get started!</div>
+    <div class="buttons">
+        <button onclick="nextProgress()">Next</button>
+        <button onclick="resetProgress()">Reset</button>
+    </div>
+    <div id="confetti" class="confetti"></div>
+    <script>
+        let progress = 0;
+const milestones = [25, 50, 75, 100];
+const progressBar = document.getElementById('progress-bar');
+const quoteElement = document.getElementById('quote');
+const confettiElement = document.getElementById('confetti');
+const quotes = [
+    "Keep going, you're doing great!",
+    "Halfway there, keep it up!",
+    "Almost there, don't give up!",
+    "Congratulations, you did it!"
+];
+
+function nextProgress() {
+    if (progress < 100) {
+        progress += 25;
+        updateProgressBar();
+        checkMilestone();
+    }
+}
+
+function resetProgress() {
+    progress = 0;
+    updateProgressBar();
+    quoteElement.textContent = "Let's get started!";
+    confettiElement.style.display = 'none';
+}
+
+function updateProgressBar() {
+    progressBar.style.width = progress + '%';
+    updateMilestones();
+}
+
+function updateMilestones() {
+    milestones.forEach((milestone, index) => {
+        const milestoneElement = document.getElementById(`milestone-${index + 1}`);
+        if (progress >= milestone) {
+            milestoneElement.style.backgroundColor = '#ffffff';
+        } else {
+            milestoneElement.style.backgroundColor = 'transparent';
+        }
+    });
+}
+
+function checkMilestone() {
+    milestones.forEach((milestone, index) => {
+        if (progress === milestone) {
+            quoteElement.textContent = quotes[index];
+            if (milestone === 100) {
+                confettiElement.style.display = 'block';
+                setTimeout(() => {
+                    confettiElement.style.display = 'none';
+                }, 3000);
+            }
+        }
+    });
+}
+
+    </script>
+</body>
+</html>
